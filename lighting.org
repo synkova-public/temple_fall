@@ -1,0 +1,64 @@
+Lighting is a 0-1+ multiplier of pixel colour on:
+
+**** The Backdrop
+   - is a texture that covers the whole screen,
+     so its lighting logic is primarily in the fragment shaders where texture mapping occurs.
+     file:src/world.cpp
+     file:src/backdrop.cpp
+     file:shaders/loop.vs.glsl
+   - file:shaders/loop.fs.glsl contains:
+     float lux = min(1 / pow(length(texcoord.xy - fragment_lightpos) * 4, 1.2), 3);
+
+
+***** light spread/attenuation
+    - The 1.2
+
+    - Lowering it will make light go 'further'
+    - In a real vacuum it goes ideally like 1/r^2 (so 2 in the above formula),
+      because the energy of the emitted light is conserved
+      throughout every shell of space it expands through.
+    - In a game, it's whatever you want;
+
+****** dimensional factor for length
+     - The 4
+     - pixel units don't otherwise have physical meaning,
+       so this is essentially there to give some
+       flexibility to the meaning of distances.
+     - Raising it will make it even darker
+       like it had to travel a longer distance
+
+***** maximum
+    - The 3
+
+    - This makes it so that the light near the raider doesn't blow up to infinity,
+      but plateaus with pleasant incandesence.
+
+
+
+**** Platforms, coins, and spikes
+   - are handled in basically the same way
+   - sprite textures
+     file:src/platform.cpp
+     file:shaders/platform.vs.glsl
+     file:shaders/platform.fs.glsl
+     file:src/coin.cpp
+     file:shaders/illuminated_texture.vs.glsl
+     file:shaders/illuminated_texture.fs.glsl
+   - rendered vertices
+     file:src/fallingSpike.cpp
+     file:shaders/illuminated_vertices.vs.glsl
+     file:shaders/illuminated_vertices.fs.glsl
+
+   - file:src/world.cpp in update contains:
+     platform.illumination = min(100 / len(sub(m_raider.get_position(), platform.get_position())), 1.0f);
+     coin.illumination = min(100 / len(sub(m_raider.get_position(), coin.get_position())), 1.0f);
+     fs.illumination =  min(100 / len(sub(m_raider.get_position(), fs.get_position())), 1.0f);
+
+***** brightness
+      - The 100
+        
+      - The 'len'
+        This is an emplicit 1/r law,
+        you could increase the complexity by raising it to a different power
+***** maximum
+      - The 1.0f

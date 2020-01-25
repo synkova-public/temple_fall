@@ -1,0 +1,3 @@
+/Users/phoenix/Desktop/temple_fall/build/CMakeFiles/rebuild_cache.dir
+/Users/phoenix/Desktop/temple_fall/build/CMakeFiles/edit_cache.dir
+/Users/phoenix/Desktop/temple_fall/build/CMakeFiles/salmon.dir
