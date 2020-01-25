@@ -1,0 +1,5 @@
+build/
+.idea/
+.DS_STORE
+src/project_path.hpp
+data/status/scores.txt
